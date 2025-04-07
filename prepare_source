@@ -1,0 +1,18 @@
+orig=$(mktemp)
+debPatches=$(mktemp)
+apt-get install -y curl
+curl -s https://packages.gardenlinux.io/gardenlinux/pool/f65d6360b13fa59fd2f283296ae83e86640d5270cf59cbbe7de17761520577a9/libxslt_1.1.35.orig.tar.xz -o "${orig}.tar.xz"
+curl -s https://packages.gardenlinux.io/gardenlinux/pool/f65d6360b13fa59fd2f283296ae83e86640d5270cf59cbbe7de17761520577a9/libxslt_1.1.35-1.2.debian.tar.xz -o "${debPatches}.tar.xz"
+# add here some sha checks
+if ! echo "8247f33e9a872c6ac859aa45018bc4c4d00b97e2feac9eebc10c93ce1f34dd79 ${orig}.tar.xz" | sha256sum --check; then
+    echo "checksum check failed"; exit 1
+fi
+
+if ! echo "6f56561d6f8d129ca6c72ada897f59684a8ea1a8acaa6835c8152e44b8151000 ${debPatches}.tar.xz" | sha256sum --check; then
+    echo "checksum check failed"; exit 1
+fi
+
+auto_decompress "${orig}.tar.xz" | tee "$dir/orig.tar" | tar --extract --strip-components 1 --directory "$dir/src"
+auto_decompress "${debPatches}.tar.xz" | tar --extract --directory "$dir/src"
+
+version_suffix=gl0~bp1592
