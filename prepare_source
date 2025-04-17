@@ -15,4 +15,4 @@ fi
 auto_decompress "${orig}.tar.xz" | tee "$dir/orig.tar" | tar --extract --strip-components 1 --directory "$dir/src"
 auto_decompress "${debPatches}.tar.xz" | tar --extract --directory "$dir/src"
 
-version_suffix=gl0~bp1592
+version_suffix=gl0~bp1443
